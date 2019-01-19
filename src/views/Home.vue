@@ -224,6 +224,7 @@ export default {
       if (exRows.length === 0) return
       getWatcher(row.id)
         .then(res => {
+          row.score = res.score
           row.events = res.data.events
         })
     }
