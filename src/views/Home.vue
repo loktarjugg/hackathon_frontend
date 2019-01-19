@@ -224,7 +224,8 @@ export default {
       if (exRows.length === 0) return
       getWatcher(row.id)
         .then(res => {
-          row.score = res.score
+          console.log(row)
+          row.score = res.data.score
           row.events = res.data.events
         })
     }
