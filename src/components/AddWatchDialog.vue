@@ -2,7 +2,7 @@
     <section>
         <Modal
             on-ok="handleSubmit"
-            title="Add Watch"
+            title="ADD ADDRESS"
             :footer-hide="true"
             :value="dialogVisable"
             @on-cancel="onCancel"

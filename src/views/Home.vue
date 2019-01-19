@@ -1,12 +1,12 @@
 <template>
   <section class="home">
     <div class="no-watcher" v-if="!hasWatcher">
-      <Button type="dashed" class="empty-button" @click="watchDialogVisable = true">ADD WATCH</Button>
-      <span>Click the `ADD WATCH` button to start watching</span>
+      <Button type="dashed" class="empty-button" @click="watchDialogVisable = true">ADD ADDRESS</Button>
+      <span>Click the `ADD ADDRESS` button to start watching</span>
     </div>
     <div class="custom-table" v-else>
       <div class="table-header">
-        <Button type="success" size="default" @click="watchDialogVisable = true">ADD WATCH</Button>
+        <Button type="success" size="default" @click="watchDialogVisable = true">ADD ADDRESS</Button>
       </div>
       <el-table
         @expand-change="handleExpand"

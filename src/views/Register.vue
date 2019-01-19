@@ -9,7 +9,7 @@
                 <FormItem label="Mobile Number" prop="mobile">
                     <Input class="input" v-model="loginData.mobile" placeholder="Enter your Mobile Number"></Input>
                 </FormItem>
-                <FormItem label="ID Number" prop="ic_number">
+                <FormItem label="ID" prop="ic_number">
                     <Input class="input" v-model="loginData.ic_number" placeholder="Enter your IC Number"></Input>
                 </FormItem>
                 <FormItem label="ID Photo" prop="ic_photo">
@@ -38,7 +38,7 @@
                 <FormItem label="Password" prop="password">
                     <Input type="password" class="input" v-model="loginData.password" placeholder="Enter your password"></Input>
                 </FormItem>
-                <FormItem label="Password confirm" prop="password_confirmation">
+                <FormItem label="Password Confirm" prop="password_confirmation">
                     <Input type="password" class="input" v-model="loginData.password_confirmation" placeholder="Enter your confirm password"></Input>
                 </FormItem>
                 <FormItem>
@@ -94,8 +94,8 @@ export default {
           { required: true, message: 'The Mobile cannot be empty', trigger: 'blur' }
         ],
         ic_number: [
-          { required: true, message: 'The ID Number cannot be empty', trigger: 'blur' },
-          { type: 'string', max: 200, message: 'ID Number no greater than 200 words', trigger: 'change' }
+          { required: true, message: 'The ID cannot be empty', trigger: 'blur' },
+          { type: 'string', max: 200, message: 'ID no greater than 200 words', trigger: 'change' }
         ],
         ic_photo: [
           { required: true, message: 'The ID Photo cannot be empty', trigger: 'blur' },
