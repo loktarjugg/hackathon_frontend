@@ -34,8 +34,10 @@
               </template>
             </el-table-column>
             <el-table-column
-            prop="value"
             label="Value">
+              <template slot-scope="scope">
+                {{ scope.row.value | toWei }} ETH
+              </template>
             </el-table-column>
             <el-table-column
             label="Status">
@@ -123,6 +125,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import { getWatchers, deleteWatcher, watcherAgain } from '@/api/Watcher'
 import { Table, TableColumn, Popover } from 'element-ui'
 import Vue from 'vue'
+import { fromWei } from 'ethjs-unit'
 Vue.component(Table.name, Table)
 Vue.component(TableColumn.name, TableColumn)
 Vue.component(Popover.name, Popover)
@@ -182,6 +185,11 @@ export default {
   watch: {
     'params.page' () {
       this.init()
+    }
+  },
+  filters: {
+    toWei (value) {
+      return fromWei(value, 'ether')
     }
   }
 }
