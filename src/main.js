@@ -17,6 +17,7 @@ window.addEventListener('load', function () {
   (typeof window.web3 !== 'undefined')) {
     // Web3 browser user detected. You can now use the provider.
     const provider = window['ethereum'] || window.web3.currentProvider
+    provider.enable()
     window.web3 = new Web3(provider)
   }
 
