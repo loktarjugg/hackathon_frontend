@@ -8,6 +8,13 @@ export const getWatchers = params => {
   })
 }
 
+export const getWatcher = id => {
+  return fetch({
+    url: `/watchers/${id}`,
+    method: 'GET'
+  })
+}
+
 export const addWatcher = address => {
   return fetch({
     url: '/watchers',

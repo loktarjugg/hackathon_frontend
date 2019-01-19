@@ -9,6 +9,7 @@
         <Button type="success" size="default" @click="watchDialogVisable = true">ADD WATCH</Button>
       </div>
       <el-table
+        @expand-change="handleExpand"
         :data="watcherLists.data"
         style="width: 100%">
         <el-table-column type="expand">
@@ -50,15 +51,28 @@
             <el-table-column
             label="Tag">
               <template slot-scope="scope">
-                <Tag color="success">NONE</Tag>
+                <el-tag
+                  v-if="scope.row.tag !== '' && scope.row.tag !== 0"
+                  :key="scope.row.tag"
+                  :disable-transitions="false">
+                  {{scope.row.tag}}
+                </el-tag>
+                <div v-else>
+                    <el-input
+                    class="input-new-tag"
+                    v-if="inputVisible"
+                    v-model="inputValue"
+                    ref="saveTagInput"
+                    size="small"
+                    @keyup.enter.native="handleInputConfirm(scope.row)"
+                    @blur="handleInputConfirm(scope.row)"
+                  >
+                  </el-input>
+                  <Button v-else class="button-new-tag" size="small" @click="showInput">NONE</Button>
+                </div>
+
               </template>
             </el-table-column>
-            <!-- <el-table-column width="200" label="Auction">
-              <template slot-scope="scope">
-                <Button style="margin-right:4px !important;" type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">Sync again</Button>
-                <Button type="warning" size="small" @click="handleEdit(scope.$index, scope.row)">Delete</Button>
-              </template>
-            </el-table-column> -->
             </el-table>
           </template>
         </el-table-column>
@@ -122,13 +136,15 @@
 
 <script>
 import 'element-ui/lib/theme-chalk/index.css'
-import { getWatchers, deleteWatcher, watcherAgain } from '@/api/Watcher'
-import { Table, TableColumn, Popover } from 'element-ui'
+import { getWatchers, deleteWatcher, watcherAgain, getWatcher } from '@/api/Watcher'
+import { updateTag } from '@/api/Event'
+import { Table, TableColumn, Tag, Input } from 'element-ui'
 import Vue from 'vue'
 import { fromWei } from 'ethjs-unit'
 Vue.component(Table.name, Table)
 Vue.component(TableColumn.name, TableColumn)
-Vue.component(Popover.name, Popover)
+Vue.component(Tag.name, Tag)
+Vue.component(Input.name, Input)
 export default {
   name: 'home',
   data () {
@@ -138,7 +154,9 @@ export default {
       watcherLists: null,
       params: {
         page: 1
-      }
+      },
+      inputVisible: false,
+      inputValue: ''
     }
   },
   components: {
@@ -180,6 +198,35 @@ export default {
         .then(() => {
           this.$Message.success('执行成功!等待队列完成')
         })
+    },
+    showInput () {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+
+    handleInputConfirm (row) {
+      let inputValue = this.inputValue
+      updateTag(inputValue, row.id)
+        .then(() => {
+          if (inputValue) {
+            row.tag = inputValue
+          }
+          this.inputVisible = false
+          this.inputValue = ''
+          this.$Message.success('Success!')
+        }).catch(e => {
+          this.$Message.error('Error!')
+        })
+    },
+    handleExpand (row, exRows) {
+      if (exRows.length === 0) return
+      getWatcher(row.id)
+        .then(res => {
+          row = res.data
+        })
+      console.log(row, exRows)
     }
   },
   watch: {
@@ -233,6 +280,22 @@ export default {
   .table-expand label {
     width: 90px;
     color: #99a9bf;
+  }
+
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
   }
 
 </style>
