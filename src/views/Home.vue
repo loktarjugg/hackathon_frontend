@@ -11,41 +11,97 @@
       <el-table
         :data="watcherLists.data"
         style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-table
+            size="small"
+            border
+            label-position="left"
+            :data="props.row.events"
+            style="width: 100%"
+            inline
+            class="table-expand">
+            <el-table-column
+            fixed
+            type="index">
+            </el-table-column>
+            <el-table-column
+            width="300"
+            show-overflow-tooltip
+            label="Hash">
+              <template slot-scope="scope">
+                <a target="_blank" :href="'https://etherscan.io/tx/' + scope.row.hash">{{ scope.row.hash }}</a>
+              </template>
+            </el-table-column>
+            <el-table-column
+            prop="value"
+            label="Value">
+            </el-table-column>
+            <el-table-column
+            label="Status">
+              <template slot-scope="scope">
+                <Tag color="warning" v-if="scope.row.status === 0">Unknown</Tag>
+                <Tag color="error" v-else-if="scope.row.status === 1">Clean</Tag>
+                <Tag color="success" v-else>Black</Tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+            label="Tag">
+              <template slot-scope="scope">
+                <Tag color="success">NONE</Tag>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column width="200" label="Auction">
+              <template slot-scope="scope">
+                <Button style="margin-right:4px !important;" type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">Sync again</Button>
+                <Button type="warning" size="small" @click="handleEdit(scope.$index, scope.row)">Delete</Button>
+              </template>
+            </el-table-column> -->
+            </el-table>
+          </template>
+        </el-table-column>
         <el-table-column
-          prop="id"
-          label="ID"
-          fixed>
+        prop="id"
+        label="ID">
         </el-table-column>
         <el-table-column
           label="Address"
-          width="370">
+          width="400">
           <template slot-scope="scope">
             <span>{{ scope.row.address }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="Block Number"
-          prop="block_number"
-          width="200">
-          </el-table-column>
-          <el-table-column
-          label="Sync Block Number"
-          prop="sync_block_number"
-          width="200">
-          </el-table-column>
-
           <el-table-column
             label="score"
-            width="370">
+            width="100">
             <template slot-scope="scope">
               <span>{{ scope.row.score }}</span>
             </template>
           </el-table-column>
 
-        <el-table-column width="200" label="Auction" fixed="right">
+        <el-table-column width="200" label="Auction">
           <template slot-scope="scope">
-            <Button style="margin-right:4px !important;" type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">Sync again</Button>
-            <Button type="warning" size="small" @click="handleEdit(scope.$index, scope.row)">Delete</Button>
+            <Poptip
+                transfer
+                popper-class="custom-poptip"
+                confirm
+                ok-text="Yes"
+                cancel-text="Cancel"
+                title="Are you sure you want to sync this item?"
+                @on-ok="syncAgain(scope.row.id)">
+                <Button style="margin-right:4px !important;" type="primary" size="small">Sync again</Button>
+            </Poptip>
+
+            <Poptip
+                transfer
+                popper-class="custom-poptip"
+                confirm
+                ok-text="Yes"
+                cancel-text="Cancel"
+                title="Are you sure you want to delete this item?"
+                @on-ok="deleteWatch(scope.row.id)">
+                <Button type="warning" size="small">Delete</Button>
+            </Poptip>
           </template>
         </el-table-column>
       </el-table>
@@ -64,11 +120,12 @@
 
 <script>
 import 'element-ui/lib/theme-chalk/index.css'
-import { getWatchers } from '@/api/Watcher'
-import { Table, TableColumn } from 'element-ui'
+import { getWatchers, deleteWatcher, watcherAgain } from '@/api/Watcher'
+import { Table, TableColumn, Popover } from 'element-ui'
 import Vue from 'vue'
 Vue.component(Table.name, Table)
 Vue.component(TableColumn.name, TableColumn)
+Vue.component(Popover.name, Popover)
 export default {
   name: 'home',
   data () {
@@ -107,6 +164,19 @@ export default {
     },
     handlePagiSizeChange (page) {
       this.params.page = page
+    },
+    deleteWatch (id) {
+      deleteWatcher(id)
+        .then(() => {
+          this.$Message.success('deleted!')
+          this.init()
+        })
+    },
+    syncAgain (id) {
+      watcherAgain(id)
+        .then(() => {
+          this.$Message.success('执行成功!等待队列完成')
+        })
     }
   },
   watch: {
@@ -121,8 +191,9 @@ export default {
 @import url('/element-ui/lib/theme-chalk/index.css');
 
   .home{
-    height: 60vh;
+    min-height: 60vh;
     .no-watcher{
+      height: 60vh !important;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -150,4 +221,10 @@ export default {
       }
     }
   }
+
+  .table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
 </style>

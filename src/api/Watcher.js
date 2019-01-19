@@ -15,3 +15,17 @@ export const addWatcher = address => {
     data: { address }
   })
 }
+
+export const deleteWatcher = id => {
+  return fetch({
+    url: `/watchers/${id}`,
+    method: 'delete'
+  })
+}
+
+export const watcherAgain = id => {
+  return fetch({
+    url: `/watchers/${id}/watch-again`,
+    method: 'post'
+  })
+}

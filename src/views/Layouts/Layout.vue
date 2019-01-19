@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="layout-content">
         <custom-header></custom-header>
         <Content :style="{padding: '0 50px', margin:'0 0 50px 0'}">
             <Card :style="{margin: '40px 0'}">
@@ -24,9 +24,6 @@ export default {
     key () {
       return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
     }
-  },
-  created () {
-    console.log(this.$router)
   }
 }
 </script>
@@ -39,11 +36,19 @@ export default {
     border-radius: 4px;
     overflow: hidden;
 }
-
+.layout-content{
+    min-height: 100vh;
+}
 .layout-footer-center{
     text-align: center;
+    display: inline-block;
+}
+.footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 .content{
-    min-height: 60vh;
+    // min-height: 70vh;
 }
 </style>
