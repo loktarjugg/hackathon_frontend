@@ -52,7 +52,7 @@
             label="Tag">
               <template slot-scope="scope">
                 <el-tag
-                  v-if="scope.row.tag !== '' && scope.row.tag !== 0"
+                  v-if="scope.row.tag != '' && scope.row.tag != 0"
                   :key="scope.row.tag"
                   :disable-transitions="false">
                   {{scope.row.tag}}
@@ -208,25 +208,24 @@ export default {
 
     handleInputConfirm (row) {
       let inputValue = this.inputValue
-      updateTag(inputValue, row.id)
-        .then(() => {
-          if (inputValue) {
+      if (inputValue) {
+        updateTag(inputValue, row.id)
+          .then(() => {
             row.tag = inputValue
-          }
-          this.inputVisible = false
-          this.inputValue = ''
-          this.$Message.success('Success!')
-        }).catch(e => {
-          this.$Message.error('Error!')
-        })
+            this.inputVisible = false
+            this.inputValue = ''
+            this.$Message.success('Success!')
+          }).catch(e => {
+            this.$Message.error('Error!')
+          })
+      }
     },
     handleExpand (row, exRows) {
       if (exRows.length === 0) return
       getWatcher(row.id)
         .then(res => {
-          row = res.data
+          row.events = res.data.events
         })
-      console.log(row, exRows)
     }
   },
   watch: {
