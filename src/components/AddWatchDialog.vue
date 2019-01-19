@@ -23,6 +23,7 @@
 <script>
 import { addWatcher } from '@/api/Watcher'
 import { isAddress } from '@/utils/helper'
+import ethUtil from 'ethereumjs-util'
 export default {
   data () {
     const validateAddress = (rule, value, callback) => {
@@ -60,18 +61,55 @@ export default {
       this.loading = true
       this.$refs.formData.validate((valid) => {
         if (valid) {
-          addWatcher(this.formData.address)
-            .then(() => {
-              this.loading = false
-              this.$Message.success('Add watch ethereum address success!')
-              this.handleEmit(false)
+          this.handleSign()
+            .then(res => {
+              addWatcher(this.formData.address)
+                .then(() => {
+                  this.loading = false
+                  this.$Message.success('Add watch ethereum address success!')
+                  this.handleEmit(false)
+                })
+                .catch(() => {
+                  this.loading = false
+                })
             })
-            .catch(() => {
+            .catch(e => {
               this.loading = false
+              this.$Message.error(e.message)
             })
         } else {
           this.loading = false
         }
+      })
+    },
+    handleSign () {
+      return new Promise((resolve, reject) => {
+        window.web3.eth.getAccounts()
+          .then(accounts => {
+            let text = 'test message'
+
+            let msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
+
+            let params = [msg, accounts[0]]
+
+            let method = 'personal_sign'
+
+            window.web3.currentProvider.sendAsync({
+              method,
+              params,
+              from: accounts[0]
+            }, function (err, res) {
+              if (err || res.error) {
+                reject(new Error('please confirm the sign.'))
+              }
+              if (res.result) {
+                resolve(res)
+              }
+            })
+          })
+          .catch(() => {
+            reject(new Error('please unlock your Metamask'))
+          })
       })
     },
     handleEmit (visible) {
