@@ -43,8 +43,8 @@
             label="Status">
               <template slot-scope="scope">
                 <Tag color="warning" v-if="scope.row.status === 0">Unknown</Tag>
-                <Tag color="error" v-else-if="scope.row.status === 1">Clean</Tag>
-                <Tag color="success" v-else>Black</Tag>
+                <Tag color="success" v-else-if="scope.row.status === 1">Clean</Tag>
+                <Tag color="error" v-else>Black</Tag>
               </template>
             </el-table-column>
             <el-table-column
