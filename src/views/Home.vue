@@ -60,7 +60,7 @@
                 <div v-else>
                     <el-input
                     class="input-new-tag"
-                    v-if="inputVisible"
+                    v-if="inputVisible === scope.row.id"
                     v-model="inputValue"
                     ref="saveTagInput"
                     size="small"
@@ -68,7 +68,7 @@
                     @blur="handleInputConfirm(scope.row)"
                   >
                   </el-input>
-                  <Button v-else class="button-new-tag" size="small" @click="showInput">NONE</Button>
+                  <Button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">NONE</Button>
                 </div>
 
               </template>
@@ -199,8 +199,8 @@ export default {
           this.$Message.success('执行成功!等待队列完成')
         })
     },
-    showInput () {
-      this.inputVisible = true
+    showInput (row) {
+      this.inputVisible = row.id
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
@@ -212,7 +212,7 @@ export default {
         updateTag(inputValue, row.id)
           .then(() => {
             row.tag = inputValue
-            this.inputVisible = false
+            this.inputVisible = ''
             this.inputValue = ''
             this.$Message.success('Success!')
           }).catch(e => {
