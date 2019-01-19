@@ -9,10 +9,10 @@
                 <FormItem label="Mobile Number" prop="mobile">
                     <Input class="input" v-model="loginData.mobile" placeholder="Enter your Mobile Number"></Input>
                 </FormItem>
-                <FormItem label="IC Number" prop="ic_number">
+                <FormItem label="ID Number" prop="ic_number">
                     <Input class="input" v-model="loginData.ic_number" placeholder="Enter your IC Number"></Input>
                 </FormItem>
-                <FormItem label="IC Photo" prop="ic_photo">
+                <FormItem label="ID Photo" prop="ic_photo">
                     <Upload
                         name="file"
                         ref="upload"
@@ -94,12 +94,12 @@ export default {
           { required: true, message: 'The Mobile cannot be empty', trigger: 'blur' }
         ],
         ic_number: [
-          { required: true, message: 'The IC Number cannot be empty', trigger: 'blur' },
-          { type: 'string', max: 200, message: 'IC Number no greater than 200 words', trigger: 'change' }
+          { required: true, message: 'The ID Number cannot be empty', trigger: 'blur' },
+          { type: 'string', max: 200, message: 'ID Number no greater than 200 words', trigger: 'change' }
         ],
         ic_photo: [
-          { required: true, message: 'The Ic Photo cannot be empty', trigger: 'blur' },
-          { type: 'url', message: 'Ic Photo must be a URL', trigger: 'change' }
+          { required: true, message: 'The ID Photo cannot be empty', trigger: 'blur' },
+          { type: 'url', message: 'ID Photo must be a URL', trigger: 'change' }
         ],
         password: [
           { required: true, message: 'The Password cannot be empty', trigger: 'blur' },
